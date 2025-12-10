@@ -12,6 +12,7 @@ import tn.fst.eventsproject.repositories.EventRepository;
 import tn.fst.eventsproject.repositories.LogisticsRepository;
 import tn.fst.eventsproject.repositories.ParticipantRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,7 +34,9 @@ public class EventServicesImpl implements IEventServices{
 
     @Override
     public Event addAffectEvenParticipant(Event event, int idParticipant) {
-        Participant participant = participantRepository.findById(idParticipant).orElse(null);
+        Participant participant = participantRepository.findById(idParticipant).orElseThrow(
+() -> new EntityNotFoundException("Participant not found with id " + idParticipant));
+
         if(participant.getEvents() == null){
             Set<Event> events = new HashSet<>();
             events.add(event);
